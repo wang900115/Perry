@@ -1,0 +1,28 @@
+package rediskey
+
+const (
+	REDIS_TABLE_USER_STATUS  = "user:status"   // key 為 user_id
+	REDIS_TABLE_USER_SESSION = "user:session:" // key 為 session_id (最多只有3個)
+	REDIS_TABLE_USER_TOKEN   = "user:token:"   // key 為 user_id:session_id (最多只有3個)
+)
+
+const (
+	REDIS_FIELD_USER_STATUS_USERNAME   = "username"
+	REDIS_FIELD_USER_STATUS_FULLNAME   = "fullname"
+	REDIS_FIELD_USER_STATUS_NICKNAME   = "nickname"
+	REDIS_FIELD_USER_STATUS_AVATARURL  = "avatarurl"
+	REDIS_FIELD_USER_STATUS_DEVICE     = "device"
+	REDIS_FIELD_USER_STATUS_LASTIP     = "last_ip"
+	REDIS_FIELD_USER_STATUS_LASTLOGIN  = "last_login"
+	REDIS_FIELD_USER_STATUS_LASTLOGOUT = "last_logout"
+)
+
+// session
+const (
+	REDIS_FIELD_USER_SESSION_PROVIDER  = "provider"
+	REDIS_FIELD_USER_SESSION_IP        = "ip"
+	REDIS_FIELD_USER_SESSION_UA        = "user_agent"
+	REDIS_FIELD_USER_SESSION_CREATED   = "created_at"
+	REDIS_FIELD_USER_SESSION_EXPIRED   = "expired_at"
+	REDIS_FIELD_USER_SESSION_IS_ACTIVE = "is_active"
+)

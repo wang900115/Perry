@@ -1,0 +1,10 @@
+# configuration files
+*.yaml
+*.json
+
+# test files
+/test
+
+# build files
+/build
+
