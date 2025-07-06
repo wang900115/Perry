@@ -11,8 +11,11 @@ import (
 )
 
 type User struct {
-	userRepo    gorminterface.User
-	tokenRepo   redisinterface.Token
+	// db
+	userRepo gorminterface.User
+	// redis
+	tokenRepo redisinterface.Token
+	// redis
 	sessionRepo redisinterface.Session
 }
 
@@ -76,6 +79,6 @@ func (u *User) Delete(ctx context.Context, user_id uint) error {
 }
 
 // !todo 找回帳號
-func (u *User) Forgot() error {
+func (u *User) Forgot(ctx context.Context) error {
 	return nil
 }

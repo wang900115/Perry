@@ -17,8 +17,8 @@ type UserSession struct {
 // redis's model -> redis
 func (u UserSession) ToHash() map[string]interface{} {
 	return map[string]interface{}{
-		rediskey.REDIS_FIELD_USER_SESSION_PROVIDER:  u.Provider,
 		rediskey.REDIS_FIELD_USER_SESSION_IP:        u.IP,
+		rediskey.REDIS_FIELD_USER_SESSION_PROVIDER:  u.Provider,
 		rediskey.REDIS_FIELD_USER_SESSION_UA:        u.UserAgent,
 		rediskey.REDIS_FIELD_USER_SESSION_CREATED:   convert.FromTimestampToString(u.CreatedAt),
 		rediskey.REDIS_FIELD_USER_SESSION_EXPIRED:   convert.FromTimestampToString(u.ExpiredAt),
@@ -27,8 +27,8 @@ func (u UserSession) ToHash() map[string]interface{} {
 }
 
 // redis's model <- redis
-func (u UserSession) FromHash(data map[string]string) UserSession {
-	return UserSession{
+func (u UserSession) FromHash(data map[string]string) *UserSession {
+	return &UserSession{
 		Provider:  data[rediskey.REDIS_FIELD_USER_SESSION_PROVIDER],
 		IP:        data[rediskey.REDIS_FIELD_USER_SESSION_IP],
 		UserAgent: data[rediskey.REDIS_FIELD_USER_SESSION_UA],
