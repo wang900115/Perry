@@ -3,7 +3,7 @@ package rediskey
 const (
 	REDIS_TABLE_USER_STATUS  = "user:status"   // key 為 user_id
 	REDIS_TABLE_USER_SESSION = "user:session:" // key 為 session_id (最多只有3個)
-	REDIS_TABLE_USER_TOKEN   = "user:token:"   // key 為 user_id:session_id (最多只有3個)
+	REDIS_TABLE_USER_TOKEN   = "user:jwt:"     // key 為 user_id:session_id (最多只有3個)
 )
 
 const (
@@ -18,11 +18,9 @@ const (
 )
 
 // session
-
 const (
 	REDIS_INCR_USER_SESSION_ID = "session_id"
 )
-
 const (
 	REDIS_FIELD_USER_SESSION_PROVIDER  = "provider"
 	REDIS_FIELD_USER_SESSION_IP        = "ip"
@@ -30,4 +28,15 @@ const (
 	REDIS_FIELD_USER_SESSION_CREATED   = "created_at"
 	REDIS_FIELD_USER_SESSION_EXPIRED   = "expired_at"
 	REDIS_FIELD_USER_SESSION_IS_ACTIVE = "is_active"
+)
+
+// token
+const (
+	REDIS_FIELD_USER_TOKEN_AUD      = "aud"
+	REDIS_FIELD_USER_TOKEN_JTI      = "jti"
+	REDIS_FIELD_USER_TOKEN_ISSUER   = "issuer"
+	REDIS_FIELD_USER_TOKEN_ISSUEDAT = "issued_at"
+	REDIS_FIELD_USER_TOKEN_EXP      = "expired_at"
+	REDIS_FIELD_USER_TOKEN_NBF      = "not_before"
+	REDIS_FIELD_USER_TOKEN_SUB      = "subject"
 )
