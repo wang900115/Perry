@@ -53,15 +53,15 @@ func (u *User) Login(ctx context.Context, username, password, ip, userAgent stri
 
 // 登出 (單點)
 func (u *User) Logout(ctx context.Context, user_id uint, session_id int64) error {
-	err := u.userRepo.UpdateLastLogout(ctx, user_id, time.Now())
-	if err != nil {
-		return err
-	}
-	err = u.sessionRepo.Deactivate(ctx, session_id)
+	err := u.sessionRepo.Deactivate(ctx, session_id)
 	if err != nil {
 		return err
 	}
 	err = u.tokenRepo.Delete(ctx, user_id, session_id)
+	if err != nil {
+		return err
+	}
+	err = u.userRepo.UpdateLastLogout(ctx, user_id, time.Now())
 	if err != nil {
 		return err
 	}

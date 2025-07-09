@@ -35,7 +35,7 @@ func (s *Session) Generate(ctx context.Context, userId uint, ip, userAgent strin
 	if err != nil {
 		return 0, err
 	}
-	listKey := rediskey.REDIS_LIST_USER_SESSION + string(userId)
+	listKey := rediskey.REDIS_LIST_USER_SESSION + convert.FromUintToString(userId)
 	err = s.redis.LPush(ctx, listKey, sessionId).Err()
 	if err != nil {
 		return 0, err

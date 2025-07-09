@@ -32,8 +32,6 @@ const (
 
 // token
 const (
-	REDIS_FIELD_USER_TOKEN_USER_ID = "user_id"
-
 	REDIS_FIELD_USER_TOKEN_AUD      = "aud"
 	REDIS_FIELD_USER_TOKEN_JTI      = "jti"
 	REDIS_FIELD_USER_TOKEN_ISSUER   = "issuer"

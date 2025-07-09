@@ -7,30 +7,27 @@ import (
 )
 
 type Claims struct {
-	UserID         uint
-	StandardClaims jwt.StandardClaims
+	jwt.StandardClaims
 }
 
 // redis's model -> redis
 func (c Claims) ToHash() map[string]interface{} {
 	return map[string]interface{}{
-		rediskey.REDIS_FIELD_USER_TOKEN_USER_ID: convert.FromUintToString(c.UserID),
 		// rediskey.REDIS_FIELD_USER_TOKEN_AUD:      c.Audience,
-		rediskey.REDIS_FIELD_USER_TOKEN_EXP:      convert.FromTimestampToString(c.StandardClaims.ExpiresAt),
-		rediskey.REDIS_FIELD_USER_TOKEN_ISSUEDAT: convert.FromTimestampToString(c.StandardClaims.IssuedAt),
-		rediskey.REDIS_FIELD_USER_TOKEN_ISSUER:   c.StandardClaims.Issuer,
-		rediskey.REDIS_FIELD_USER_TOKEN_JTI:      c.StandardClaims.Id,
+		rediskey.REDIS_FIELD_USER_TOKEN_EXP:      convert.FromTimestampToString(c.ExpiresAt),
+		rediskey.REDIS_FIELD_USER_TOKEN_ISSUEDAT: convert.FromTimestampToString(c.IssuedAt),
+		rediskey.REDIS_FIELD_USER_TOKEN_ISSUER:   c.Issuer,
+		rediskey.REDIS_FIELD_USER_TOKEN_JTI:      c.Id,
 		// rediskey.REDIS_FIELD_USER_TOKEN_NBF:      convert.FromTimestampToString(c.NotBefore),
-		rediskey.REDIS_FIELD_USER_TOKEN_SUB: c.StandardClaims.Subject,
+		rediskey.REDIS_FIELD_USER_TOKEN_SUB: c.Subject,
 	}
 }
 
 // redis's model <- redis
 func (c Claims) FromHash(data map[string]string) Claims {
 	return Claims{
-		UserID: convert.FromStringToUint(data[rediskey.REDIS_FIELD_USER_TOKEN_USER_ID]),
 
-		StandardClaims: jwt.StandardClaims{
+		jwt.StandardClaims{
 			// Audience:  data[rediskey.REDIS_FIELD_USER_TOKEN_AUD],
 			ExpiresAt: convert.FromStringToTimeStamp(data[rediskey.REDIS_FIELD_USER_TOKEN_EXP]),
 			Id:        data[rediskey.REDIS_FIELD_USER_TOKEN_JTI],

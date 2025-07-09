@@ -11,6 +11,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	rediskey "github.com/wang900115/Perry/internal/adapter/redis/key"
 	redistable "github.com/wang900115/Perry/internal/adapter/redis/table"
+	redisinterface "github.com/wang900115/Perry/internal/domain/interface/redis"
 	"github.com/wang900115/utils/convert"
 )
 
@@ -21,7 +22,7 @@ type Token struct {
 	secret     []byte
 }
 
-func NewTokenImplement(redis *redis.Client, expiration int64, issuer, secret string) *Token {
+func NewTokenImplement(redis *redis.Client, expiration int64, issuer, secret string) redisinterface.Token {
 	return &Token{redis: redis, expiration: expiration, issuer: issuer, secret: []byte(secret)}
 }
 
@@ -29,7 +30,6 @@ func (t *Token) Generate(ctx context.Context, userID uint, sessionID int64) (str
 	now := time.Now().Unix()
 	exp := now + t.expiration
 	claims := redistable.Claims{
-		UserID: userID,
 		StandardClaims: jwt.StandardClaims{
 			Id:        convert.FromInt64ToString(sessionID),
 			Subject:   convert.FromUintToString(userID),
@@ -38,52 +38,55 @@ func (t *Token) Generate(ctx context.Context, userID uint, sessionID int64) (str
 			Issuer:    t.issuer,
 		},
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256,
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		claims.StandardClaims)
 	signedToken, err := token.SignedString(t.secret)
 	if err != nil {
 		return "", err
 	}
-	key := signedToken
-	if err := t.redis.HSet(ctx, key, claims.ToHash()).Err(); err != nil {
+	key := groupName(userID, sessionID)
+
+	pipe := t.redis.Pipeline()
+
+	if err := pipe.HSet(ctx, key, claims.ToHash()).Err(); err != nil {
 		return "", err
 	}
-	if err := t.redis.ExpireAt(ctx, key, time.Unix(exp, 0)).Err(); err != nil {
+	if err := pipe.ExpireAt(ctx, key, time.Unix(exp, 0)).Err(); err != nil {
 		return "", err
 	}
 	return signedToken, nil
 }
 
-func (t *Token) Validate(ctx context.Context, token string) error {
-	parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+func (t *Token) Validate(ctx context.Context, token string) (*redistable.Claims, error) {
+	parsedToken, err := jwt.ParseWithClaims(token, &redistable.Claims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodECDSA); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
 		return t.secret, nil
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	claims, ok := parsedToken.Claims.(*jwt.StandardClaims)
+	claims, ok := parsedToken.Claims.(*redistable.Claims)
 	if !ok || !parsedToken.Valid {
-		return errors.New("invalid claims or token")
+		return nil, errors.New("invalid claims or token")
 	}
 
 	now := time.Now().Unix()
-	if claims.ExpiresAt > 0 && claims.ExpiresAt < now {
-		return errors.New("token is expired")
+	if claims.StandardClaims.ExpiresAt > 0 && claims.StandardClaims.ExpiresAt < now {
+		return nil, errors.New("token is expired")
 	}
 
-	key := groupNameString(claims.Subject, claims.Id)
+	key := groupNameString(claims.StandardClaims.Subject, claims.StandardClaims.Id)
 	exists, err := t.redis.Exists(ctx, key).Result()
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if exists == 0 {
-		return errors.New("token is not found in redis")
+		return nil, errors.New("token is not found in redis")
 	}
-	return nil
+	return claims, nil
 }
 
 func (t *Token) Refresh(ctx context.Context, token string) (string, error) {
@@ -94,7 +97,7 @@ func (t *Token) Refresh(ctx context.Context, token string) (string, error) {
 		return "", err
 	}
 
-	claims := oldToken.Claims.(*jwt.StandardClaims)
+	claims := oldToken.Claims.(*redistable.Claims)
 	sessionID, err := strconv.ParseInt(claims.Id, 10, 64)
 	if err != nil {
 		return "", err

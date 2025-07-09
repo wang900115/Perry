@@ -53,7 +53,7 @@ func (u *User) Login(ctx context.Context, username, password, ip string, lastLog
 	if err := u.gorm.WithContext(ctx).Where("username = ?", username).First(&userStatusModel).Error; err != nil {
 		return nil, err
 	}
-	right, err := encrypt.VerifyPasswordArgon2id(userStatusModel.Password, password)
+	right, err := encrypt.VerifyPasswordArgon2id(userStatusModel.User.Password, password)
 	if err != nil {
 		return nil, err
 	}

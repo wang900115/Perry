@@ -10,30 +10,42 @@ import (
 
 type User struct {
 	gorm.Model
-	Username    string
-	Password    string
-	FullName    string
-	NickName    string
-	AvatarURL   string
-	Phone       string
-	Email       string
-	Location    Location
-	Description string
+	Username    string   `gorm:"column:username"`
+	Password    string   `gorm:"column:password"`
+	FullName    string   `gorm:"column:full_name"`
+	NickName    string   `gorm:"column:nick_name"`
+	AvatarURL   string   `gorm:"column:avatar_url"`
+	Phone       string   `gorm:"column:phone"`
+	Email       string   `gorm:"column:email"`
+	Location    Location `gorm:"embedded"`
+	Description string   `gorm:"column:description"`
+}
+
+func (User) TableName() string {
+	return "user"
 }
 
 type UserStatus struct {
-	User
-	Device     string
-	LastIP     string
-	LastLogin  time.Time
-	LastLogout time.Time
+	gorm.Model
+
+	UserID uint `gorm:"column:user_id"`
+	User   User `gorm:"foreignKey:UserID"`
+
+	Device     string    `gorm:"column:device"`
+	LastIP     string    `gorm:"column:last_ip"`
+	LastLogin  time.Time `gorm:"column:last_login"`
+	LastLogout time.Time `gorm:"column:last_logout"`
+}
+
+func (UserStatus) TableName() string {
+	return "user_status"
 }
 
 type Location struct {
-	Country   string
-	City      string
-	Latitude  float64
-	Longitude float64
+	Country   string  `gorm:"column:country"`
+	City      string  `gorm:"column:city"`
+	Latitude  float64 `gorm:"column:latitude"`
+	Longitude float64 `gorm:"column:longitude"`
 }
 
 func (u *User) ToDomain() *entity.User {
