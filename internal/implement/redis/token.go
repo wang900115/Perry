@@ -29,6 +29,7 @@ func (t *Token) Generate(ctx context.Context, userID uint, sessionID int64) (str
 	now := time.Now().Unix()
 	exp := now + t.expiration
 	claims := redistable.Claims{
+		UserID: userID,
 		StandardClaims: jwt.StandardClaims{
 			Id:        convert.FromInt64ToString(sessionID),
 			Subject:   convert.FromUintToString(userID),
@@ -43,7 +44,7 @@ func (t *Token) Generate(ctx context.Context, userID uint, sessionID int64) (str
 	if err != nil {
 		return "", err
 	}
-	key := groupName(userID, sessionID)
+	key := signedToken
 	if err := t.redis.HSet(ctx, key, claims.ToHash()).Err(); err != nil {
 		return "", err
 	}
@@ -86,7 +87,7 @@ func (t *Token) Validate(ctx context.Context, token string) error {
 }
 
 func (t *Token) Refresh(ctx context.Context, token string) (string, error) {
-	oldToken, err := jwt.ParseWithClaims(token, &jwt.StandardClaims{}, func(token *jwt.Token) (interface{}, error) {
+	oldToken, err := jwt.ParseWithClaims(token, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return t.secret, nil
 	})
 	if err != nil {

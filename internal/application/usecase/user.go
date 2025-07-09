@@ -78,6 +78,16 @@ func (u *User) Delete(ctx context.Context, user_id uint) error {
 	return nil
 }
 
+// !todo 更新設定
+func (u *User) UpdateSettins(ctx context.Context, user_id uint, input validator.UpdateSettingsRequest) (entity.User, error) {
+	return entity.User{}, nil
+}
+
+// !todo 更新密碼
+func (u *User) UpdatePassword(ctx context.Context, user_id uint, newPassword string) error {
+	return nil
+}
+
 // !todo 找回帳號
 func (u *User) Forgot(ctx context.Context) error {
 	return nil

@@ -17,13 +17,11 @@ func (u *User) SetUp(router *gin.RouterGroup) {
 	userGroup := router.Group("v1/user")
 	{
 		userGroup.POST("/regist", u.user.Regist)
-		userGroup.PUT("/update", u.user.Update)
+		userGroup.PUT("/update/settings", u.user.UpdateSettings)
+		userGroup.PUT("/update/password", u.user.UpdatePassword)
 		userGroup.DELETE("/delete", u.user.Delete)
-
 		userGroup.POST("/login", u.user.Login)
 		userGroup.POST("/logout", u.user.Logout)
-
 		userGroup.POST("/forgot", u.user.Forgot)
-
 	}
 }
