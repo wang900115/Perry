@@ -9,33 +9,45 @@ import (
 
 	"github.com/golang-jwt/jwt"
 	"github.com/redis/go-redis/v9"
+	"github.com/spf13/viper"
 	rediskey "github.com/wang900115/Perry/internal/adapter/redis/key"
 	redistable "github.com/wang900115/Perry/internal/adapter/redis/table"
 	redisinterface "github.com/wang900115/Perry/internal/domain/interface/redis"
 	"github.com/wang900115/utils/convert"
 )
 
-type Token struct {
-	redis      *redis.Client
-	expiration int64
-	issuer     string
-	secret     []byte
+type tokenOption struct {
+	Issuer     string
+	Expiration int64
 }
 
-func NewTokenImplement(redis *redis.Client, expiration int64, issuer, secret string) redisinterface.Token {
-	return &Token{redis: redis, expiration: expiration, issuer: issuer, secret: []byte(secret)}
+func NewTokenOption(setting *viper.Viper) tokenOption {
+	return tokenOption{
+		Issuer:     setting.GetString("jwt.issuer"),
+		Expiration: setting.GetInt64("expiration"),
+	}
+}
+
+type Token struct {
+	redis  *redis.Client
+	option tokenOption
+	secret []byte
+}
+
+func NewTokenImplement(redis *redis.Client, option tokenOption, secret string) redisinterface.Token {
+	return &Token{redis: redis, option: option, secret: []byte(secret)}
 }
 
 func (t *Token) Generate(ctx context.Context, userID uint, sessionID int64) (string, error) {
 	now := time.Now().Unix()
-	exp := now + t.expiration
+	exp := now + t.option.Expiration
 	claims := redistable.Claims{
 		StandardClaims: jwt.StandardClaims{
 			Id:        convert.FromInt64ToString(sessionID),
 			Subject:   convert.FromUintToString(userID),
 			IssuedAt:  now,
 			ExpiresAt: exp,
-			Issuer:    t.issuer,
+			Issuer:    t.option.Issuer,
 		},
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256,

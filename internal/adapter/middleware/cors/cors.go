@@ -2,22 +2,33 @@ package cors
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	responser "github.com/wang900115/Perry/internal/adapter/response"
 )
 
-type CORS struct {
-	response     responser.Response
-	allowOrigins []string
+type corsOption struct {
+	AllowOrigins []string
 }
 
-func NewCORS(response responser.Response, allowOrigins []string) *CORS {
-	return &CORS{response: response, allowOrigins: allowOrigins}
+func NewCorsOption(setting *viper.Viper) corsOption {
+	return corsOption{
+		AllowOrigins: setting.GetStringSlice("cors.allow_origins"),
+	}
+}
+
+type CORS struct {
+	response responser.Response
+	option   corsOption
+}
+
+func NewCORS(response responser.Response, option corsOption) *CORS {
+	return &CORS{response: response, option: option}
 }
 
 func (cors *CORS) Middleware(c *gin.Context) {
 	origin := c.Request.Header.Get("Origin")
 
-	for _, o := range cors.allowOrigins {
+	for _, o := range cors.option.AllowOrigins {
 		if origin == o {
 			// 根據 Origin 決定回傳內容
 			c.Header("Vary", "Origin")

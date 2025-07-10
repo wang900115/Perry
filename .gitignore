@@ -1,6 +1,7 @@
 # configuration files
 *.yaml
 *.json
+*.env
 
 # test files
 /test

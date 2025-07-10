@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/wang900115/Perry/config"
 	"github.com/wang900115/Perry/internal/adapter/controller"
 	"github.com/wang900115/Perry/internal/adapter/middleware"
@@ -16,34 +18,36 @@ import (
 	initializeCache "github.com/wang900115/Perry/internal/init/cache"
 	initializeDB "github.com/wang900115/Perry/internal/init/database"
 	initializeServer "github.com/wang900115/Perry/internal/init/server"
+	"github.com/wang900115/Perry/setting"
 )
 
 func main() {
 	conf := config.NewConfig()
+	sett := setting.NewSetting()
 
 	redisPool := initializeCache.NewRedisPool(initializeCache.NewRedisOption(conf))
 	mysql := initializeDB.NewMySQL(initializeDB.NewMysqlOption(conf))
 	// !TODO 封裝Response
-	response := responser.Response
+	response := responser.Response{}
 
 	userRepo := gormimplement.NewUserImplement(mysql)
 	todoRepo := gormimplement.NewToDoImplement(mysql)
 
 	sessionRepo := redisimplement.NewSessionImplement(redisPool)
-	// !TODO 設定issuer , secret , expiration
-	tokenRepo := redisimplement.NewTokenImplement(redisPool)
+
+	tokenRepo := redisimplement.NewTokenImplement(redisPool, redisimplement.NewTokenOption(sett), os.Getenv("JWT_SECRET"))
 
 	todoUsecase := usecase.NewToDoUsecase(&todoRepo)
 	userUsecase := usecase.NewUserUsecase(&userRepo, &tokenRepo, &sessionRepo)
 
 	todoController := controller.NewToDoController(todoUsecase, response)
 	userController := controller.NewUserController(userUsecase, response)
-	// !TODO 設定允許來源
-	corsMiddleware := cors.NewCORS(response, allowOrigins)
+
+	corsMiddleware := cors.NewCORS(response, cors.NewCorsOption(sett))
 	jwtMiddleware := jwt.NewJWT(response, &tokenRepo)
 	secureMiddleware := secureheader.NewSecureHeader()
-	// !TODO 設定每秒幾次流量
-	redisRateLimiter := ratelimiter.NewRateLimiter(response, *redisPool, limitPerSecond)
+
+	redisRateLimiter := ratelimiter.NewRateLimiter(response, *redisPool, ratelimiter.NewRateLimiterOption(sett))
 
 	todoRoute := router.NewToDoRouter(todoController)
 	userRoute := router.NewUserRouter(userController, jwtMiddleware)
