@@ -70,7 +70,7 @@ func (u *User) Login(ctx context.Context, username, password, ip string, lastLog
 }
 
 func (u *User) UpdateLastLogout(ctx context.Context, user_id uint, lastLogout time.Time) error {
-	if err := u.gorm.WithContext(ctx).Table("user").Where("user_id = ?", user_id).Update("last_logout", lastLogout).Error; err != nil {
+	if err := u.gorm.WithContext(ctx).Table("user_status").Where("user_id = ?", user_id).Update("last_logout", lastLogout).Error; err != nil {
 		return err
 	}
 	return nil
@@ -81,5 +81,43 @@ func (u *User) Delete(ctx context.Context, user_id uint) error {
 	if err := u.gorm.WithContext(ctx).Delete(&userStatusModel, user_id).Error; err != nil {
 		return err
 	}
+	return nil
+}
+
+// 使用 map 防止 zero value
+func (u *User) UpdateSettings(ctx context.Context, user_id uint, input validator.UpdateSettingsRequest) (*entity.User, error) {
+	if err := u.gorm.WithContext(ctx).Model(&gormmodel.User{}).Where("user_id = ?", user_id).Updates(map[string]interface{}{
+		"username":   input.Username,
+		"full_name":  input.FullName,
+		"nick_name":  input.NickName,
+		"avatar_url": input.AvatarURL,
+		"phone":      input.Phone,
+		"email":      input.Email,
+		"country":    input.Location.Country,
+		"city":       input.Location.City,
+		"latitude":   input.Location.Latitude,
+		"longitude":  input.Location.Longitude,
+	}).Error; err != nil {
+		return nil, err
+	}
+
+	var user gormmodel.User
+	if err := u.gorm.Where("user_id = ?", user_id).First(&user).Error; err != nil {
+		return nil, err
+	}
+
+	return user.ToDomain(), nil
+}
+
+func (u *User) UpdatePassword(ctx context.Context, user_id uint, password string) error {
+	newPassword, err := encrypt.HashPasswordArgon2id(password)
+	if err != nil {
+		return err
+	}
+
+	if err := u.gorm.WithContext(ctx).Model(&gormmodel.User{}).Where("user_id = ?", user_id).Update("password", newPassword).Error; err != nil {
+		return err
+	}
+
 	return nil
 }

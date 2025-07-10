@@ -14,7 +14,7 @@ type User struct {
 }
 
 type UserStatus struct {
-	User
+	UserId     uint
 	Device     string
 	LastIP     string
 	LastLogin  int64

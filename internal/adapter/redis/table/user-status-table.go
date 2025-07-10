@@ -2,7 +2,6 @@ package redistable
 
 import (
 	rediskey "github.com/wang900115/Perry/internal/adapter/redis/key"
-	"github.com/wang900115/Perry/internal/domain/entity"
 	"github.com/wang900115/utils/convert"
 )
 
@@ -49,18 +48,13 @@ func (u UserStatus) FromHash(data map[string]string) UserStatus {
 }
 
 // redis's model -> domain
-func (u UserStatus) ToDomain() entity.UserStatus {
-	return entity.UserStatus{
-		User: entity.User{
-			Username:  u.Username,
-			FullName:  u.FullName,
-			NickName:  u.NickName,
-			AvatarURL: u.AvatarURL,
-		},
+// func (u UserStatus) ToDomain() entity.UserStatus {
+// 	return entity.UserStatus{
+// 		UserId: ,
 
-		Device:     u.Device,
-		LastIP:     u.LastIP,
-		LastLogin:  u.LastLogin,
-		LastLogout: u.LastLogout,
-	}
-}
+// 		Device:     u.Device,
+// 		LastIP:     u.LastIP,
+// 		LastLogin:  u.LastLogin,
+// 		LastLogout: u.LastLogout,
+// 	}
+// }

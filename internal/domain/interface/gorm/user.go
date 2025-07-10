@@ -17,4 +17,8 @@ type User interface {
 	UpdateLastLogout(context.Context, uint, time.Time) error
 	//  刪除帳號(依據id)
 	Delete(context.Context, uint) error
+	// 更新設定
+	UpdateSettings(context.Context, uint, validator.UpdateSettingsRequest) (*entity.User, error)
+	// 更新密碼
+	UpdatePassword(context.Context, uint, string) error
 }

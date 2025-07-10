@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// #region 表格欄位
 type User struct {
 	gorm.Model
 	Username    string   `gorm:"column:username"`
@@ -21,13 +22,7 @@ type User struct {
 	Description string   `gorm:"column:description"`
 }
 
-func (User) TableName() string {
-	return "user"
-}
-
 type UserStatus struct {
-	gorm.Model
-
 	UserID uint `gorm:"column:user_id"`
 	User   User `gorm:"foreignKey:UserID"`
 
@@ -37,10 +32,9 @@ type UserStatus struct {
 	LastLogout time.Time `gorm:"column:last_logout"`
 }
 
-func (UserStatus) TableName() string {
-	return "user_status"
-}
+// #endregion
 
+// #region 嵌入式欄位
 type Location struct {
 	Country   string  `gorm:"column:country"`
 	City      string  `gorm:"column:city"`
@@ -48,6 +42,20 @@ type Location struct {
 	Longitude float64 `gorm:"column:longitude"`
 }
 
+// #endregion
+
+// #region 表格名稱
+func (User) TableName() string {
+	return "user"
+}
+
+func (UserStatus) TableName() string {
+	return "user_status"
+}
+
+// #endregion
+
+// #region -> Domain
 func (u *User) ToDomain() *entity.User {
 	return &entity.User{
 		UserId:    u.ID,
@@ -64,10 +72,12 @@ func (u *User) ToDomain() *entity.User {
 
 func (u *UserStatus) ToDomain() *entity.UserStatus {
 	return &entity.UserStatus{
-		User:       *u.User.ToDomain(),
+		UserId:     u.UserID,
 		Device:     u.Device,
 		LastIP:     u.LastIP,
 		LastLogin:  convert.FromTimeTimeToTimestamp(u.LastLogin),
 		LastLogout: convert.FromTimeTimeToTimestamp(u.LastLogout),
 	}
 }
+
+// #endregion

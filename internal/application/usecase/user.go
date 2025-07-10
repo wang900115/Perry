@@ -33,22 +33,22 @@ func (u *User) Register(ctx context.Context, input validator.RegisterRequest) er
 }
 
 // 登入 (單點)
-func (u *User) Login(ctx context.Context, username, password, ip, userAgent string) (entity.UserStatus, string, error) {
+func (u *User) Login(ctx context.Context, username, password, ip, userAgent string) (*entity.UserStatus, string, error) {
 	userSatatus, err := u.userRepo.Login(ctx, username, password, ip, time.Now())
 	if err != nil {
-		return entity.UserStatus{}, "", err
+		return nil, "", err
 	}
 	userId := userSatatus.UserId
 	sessionId, err := u.sessionRepo.Generate(ctx, userId, ip, userAgent)
 	if err != nil {
-		return entity.UserStatus{}, "", err
+		return nil, "", err
 	}
 	token, err := u.tokenRepo.Generate(ctx, userId, sessionId)
 	if err != nil {
 		_ = u.sessionRepo.Delete(ctx, sessionId)
-		return entity.UserStatus{}, "", err
+		return nil, "", err
 	}
-	return *userSatatus, token, nil
+	return userSatatus, token, nil
 }
 
 // 登出 (單點)
@@ -75,16 +75,27 @@ func (u *User) Delete(ctx context.Context, user_id uint) error {
 		return err
 	}
 	err = u.tokenRepo.DeleteAll(ctx, user_id)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
-// !todo 更新設定
-func (u *User) UpdateSettins(ctx context.Context, user_id uint, input validator.UpdateSettingsRequest) (entity.User, error) {
-	return entity.User{}, nil
+// 更新設定
+func (u *User) UpdateSettins(ctx context.Context, user_id uint, input validator.UpdateSettingsRequest) (*entity.User, error) {
+	user, err := u.userRepo.UpdateSettings(ctx, user_id, input)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
-// !todo 更新密碼
+// 更新密碼
 func (u *User) UpdatePassword(ctx context.Context, user_id uint, newPassword string) error {
+	err := u.userRepo.UpdatePassword(ctx, user_id, newPassword)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

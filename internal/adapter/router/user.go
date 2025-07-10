@@ -18,7 +18,7 @@ func (u *User) SetUp(router *gin.RouterGroup) {
 	{
 		userGroup.POST("/regist", u.user.Regist)
 		userGroup.PUT("/update/settings", u.user.UpdateSettings)
-		userGroup.PUT("/update/password", u.user.UpdatePassword)
+		userGroup.PATCH("/update/password", u.user.UpdatePassword)
 		userGroup.DELETE("/delete", u.user.Delete)
 		userGroup.POST("/login", u.user.Login)
 		userGroup.POST("/logout", u.user.Logout)
