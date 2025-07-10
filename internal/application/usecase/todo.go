@@ -13,8 +13,8 @@ type ToDo struct {
 	todoRepo gorminterface.ToDo
 }
 
-func NewToDoUsecase(todoRepo gorminterface.ToDo) *ToDo {
-	return &ToDo{todoRepo: todoRepo}
+func NewToDoUsecase(todoRepo *gorminterface.ToDo) *ToDo {
+	return &ToDo{todoRepo: *todoRepo}
 }
 
 // 新增待辦事項

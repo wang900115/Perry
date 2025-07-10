@@ -19,8 +19,8 @@ type User struct {
 	sessionRepo redisinterface.Session
 }
 
-func NewUserUsecase(userRepo gorminterface.User, tokenRepo redisinterface.Token, sessionRepo redisinterface.Session) *User {
-	return &User{userRepo: userRepo, tokenRepo: tokenRepo, sessionRepo: sessionRepo}
+func NewUserUsecase(userRepo *gorminterface.User, tokenRepo *redisinterface.Token, sessionRepo *redisinterface.Session) *User {
+	return &User{userRepo: *userRepo, tokenRepo: *tokenRepo, sessionRepo: *sessionRepo}
 }
 
 // 註冊

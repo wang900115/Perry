@@ -9,8 +9,8 @@ type ToDo struct {
 	todo controller.ToDo
 }
 
-func NewToDoRouter(todo controller.ToDo) IRoute {
-	return &ToDo{todo: todo}
+func NewToDoRouter(todo *controller.ToDo) IRoute {
+	return &ToDo{todo: *todo}
 }
 
 func (t *ToDo) SetUp(router *gin.RouterGroup) {
