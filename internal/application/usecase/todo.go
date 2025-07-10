@@ -23,13 +23,13 @@ func (t *ToDo) Create(ctx context.Context, user_id uint, input validator.ToDoCre
 }
 
 // 刪除待辦事項
-func (t *ToDo) Delete(ctx context.Context, user_id uint, input validator.ToDoDeleteRequest) error {
-	return t.todoRepo.Delete(ctx, user_id, input)
+func (t *ToDo) Delete(ctx context.Context, input validator.ToDoDeleteRequest) error {
+	return t.todoRepo.Delete(ctx, input)
 }
 
 // 更新待辦事項
-func (t *ToDo) Update(ctx context.Context, user_id uint, input validator.ToDoUpdateRequest) (*entity.ToDo, error) {
-	return t.todoRepo.Update(ctx, user_id, input)
+func (t *ToDo) Update(ctx context.Context, input validator.ToDoUpdateRequest) (*entity.ToDo, error) {
+	return t.todoRepo.Update(ctx, input)
 }
 
 // 取得該使用者的待辦事項

@@ -32,3 +32,41 @@ func (t *ToDo) Create(ctx context.Context, user_id uint, input validator.ToDoCre
 
 	return createdToDo.ToDomain(), nil
 }
+
+func (t *ToDo) Update(ctx context.Context, input validator.ToDoUpdateRequest) (*entity.ToDo, error) {
+	if err := t.gorm.WithContext(ctx).Model(&gormmodel.ToDo{}).Where("id = ?", input.ID).Updates(map[string]interface{}{
+		"name":       input.Name,
+		"priority":   input.Priority,
+		"start_time": input.StartTime,
+		"end_time":   input.EndTime,
+	}).Error; err != nil {
+		return nil, err
+	}
+
+	var todoModel gormmodel.ToDo
+	if err := t.gorm.WithContext(ctx).First(&todoModel, input.ID).Error; err != nil {
+		return nil, err
+	}
+
+	return todoModel.ToDomain(), nil
+}
+
+func (t *ToDo) Delete(ctx context.Context, input validator.ToDoDeleteRequest) error {
+	var todoModel gormmodel.ToDo
+	if err := t.gorm.WithContext(ctx).Delete(&todoModel, input.ID).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (t *ToDo) Query(ctx context.Context, user_id uint) ([]*entity.ToDo, error) {
+	var todoModels []gormmodel.ToDo
+	if err := t.gorm.WithContext(ctx).Where("user_id = ?", user_id).Find(&todoModels).Error; err != nil {
+		return nil, err
+	}
+	res := make([]*entity.ToDo, 0, len(todoModels))
+	for _, todoModel := range todoModels {
+		res = append(res, todoModel.ToDomain())
+	}
+	return res, nil
+}

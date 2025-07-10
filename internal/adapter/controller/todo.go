@@ -35,16 +35,14 @@ func (t *ToDo) Create(c *gin.Context) {
 	})
 }
 
-// 更新待辦事項(需要middleware帶參數(user_id))
+// 更新待辦事項(不需要middleware帶參數)
 func (t *ToDo) Update(c *gin.Context) {
 	var req validator.ToDoUpdateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		t.response.ClientFail400(c, err)
 		return
 	}
-	// 為 ctx value
-	userID := c.GetUint("user_id")
-	todo, err := t.todo.Update(c, userID, req)
+	todo, err := t.todo.Update(c, req)
 	if err != nil {
 		t.response.ServerFail500(c, err)
 		return
@@ -54,16 +52,14 @@ func (t *ToDo) Update(c *gin.Context) {
 	})
 }
 
-// 刪除待辦事項(需要middleware帶參數(user_id))
+// 刪除待辦事項(不需要middleware帶參數)
 func (t *ToDo) Delete(c *gin.Context) {
 	var req validator.ToDoDeleteRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		t.response.ClientFail400(c, err)
 		return
 	}
-	// 為 ctx value
-	userID := c.GetUint("user_id")
-	err := t.todo.Delete(c, userID, req)
+	err := t.todo.Delete(c, req)
 	if err != nil {
 		t.response.ServerFail500(c, err)
 		return

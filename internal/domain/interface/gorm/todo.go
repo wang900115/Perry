@@ -11,9 +11,9 @@ type ToDo interface {
 	// 新增待辦事項
 	Create(context.Context, uint, validator.ToDoCreateRequest) (*entity.ToDo, error)
 	// 更新待辦事項
-	Update(context.Context, uint, validator.ToDoUpdateRequest) (*entity.ToDo, error)
+	Update(context.Context, validator.ToDoUpdateRequest) (*entity.ToDo, error)
 	// 刪除待辦事項
-	Delete(context.Context, uint, validator.ToDoDeleteRequest) error
+	Delete(context.Context, validator.ToDoDeleteRequest) error
 	// 取得待辦事項
 	Query(context.Context, uint) ([]*entity.ToDo, error)
 }
