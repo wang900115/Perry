@@ -131,3 +131,12 @@ func (r Response) ClientFail422(ctx *gin.Context, err error) {
 		Data:    err,
 	})
 }
+
+// RateLimiter
+func (r Response) ClientFail429(ctx *gin.Context, err error) {
+	ctx.JSON(http.StatusTooManyRequests, Response{
+		Code:    429,
+		Message: "fail",
+		Data:    err,
+	})
+}
