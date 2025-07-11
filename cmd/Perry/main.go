@@ -22,12 +22,18 @@ import (
 )
 
 func main() {
+	// region 取得設定
 	conf := config.NewConfig()
 	sett := setting.NewSetting()
+	// endregion
 
+	// region 初始化
 	redisPool := initializeCache.NewRedisPool(initializeCache.NewRedisOption(conf))
 	mysql := initializeDB.NewMySQL(initializeDB.NewMysqlOption(conf))
 	// !TODO 封裝Response
+	// endregion
+
+	// region 適配器
 	response := responser.Response{}
 
 	userRepo := gormimplement.NewUserImplement(mysql)
@@ -39,19 +45,20 @@ func main() {
 
 	todoUsecase := usecase.NewToDoUsecase(&todoRepo)
 	userUsecase := usecase.NewUserUsecase(&userRepo, &tokenRepo, &sessionRepo)
+	// endregion
 
+	// region WebServer
 	todoController := controller.NewToDoController(todoUsecase, response)
 	userController := controller.NewUserController(userUsecase, response)
 
 	corsMiddleware := cors.NewCORS(response, cors.NewCorsOption(sett))
 	jwtMiddleware := jwt.NewJWT(response, &tokenRepo)
 	secureMiddleware := secureheader.NewSecureHeader()
-
 	redisRateLimiter := ratelimiter.NewRateLimiter(response, *redisPool, ratelimiter.NewRateLimiterOption(sett))
 
 	todoRoute := router.NewToDoRouter(todoController)
 	userRoute := router.NewUserRouter(userController, jwtMiddleware)
-
+	// endregion
 	server := initializeServer.NewApp(
 		[]router.IRoute{
 			todoRoute,

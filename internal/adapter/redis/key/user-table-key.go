@@ -21,6 +21,7 @@ const (
 const (
 	REDIS_INCR_USER_SESSION_ID = "session_id"
 )
+
 const (
 	REDIS_FIELD_USER_SESSION_PROVIDER  = "provider"
 	REDIS_FIELD_USER_SESSION_IP        = "ip"

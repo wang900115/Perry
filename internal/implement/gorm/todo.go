@@ -39,6 +39,7 @@ func (t *ToDo) Update(ctx context.Context, input validator.ToDoUpdateRequest) (*
 		"priority":   input.Priority,
 		"start_time": input.StartTime,
 		"end_time":   input.EndTime,
+		"status":     input.Status,
 	}).Error; err != nil {
 		return nil, err
 	}
@@ -69,4 +70,12 @@ func (t *ToDo) Query(ctx context.Context, user_id uint) ([]*entity.ToDo, error) 
 		res = append(res, todoModel.ToDomain())
 	}
 	return res, nil
+}
+
+func (t *ToDo) GetStatus(ctx context.Context, input validator.ToDoGetStatusRequest) (string, error) {
+	var todoModel gormmodel.ToDo
+	if err := t.gorm.WithContext(ctx).First(&todoModel, input.ID).Error; err != nil {
+		return "", err
+	}
+	return todoModel.Status, nil
 }

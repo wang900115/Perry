@@ -11,11 +11,8 @@ import (
 )
 
 type User struct {
-	// db
-	userRepo gorminterface.User
-	// redis
-	tokenRepo redisinterface.Token
-	// redis
+	userRepo    gorminterface.User
+	tokenRepo   redisinterface.Token
 	sessionRepo redisinterface.Session
 }
 

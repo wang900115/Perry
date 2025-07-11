@@ -6,6 +6,7 @@ type AgentAddRequest struct {
 	Role        string `json:"role" validate:"required"`
 	Language    string `json:"language" validate:"required"`
 	Description string `json:"description" validate:"omitempty"`
+	Status      string `json:"status" validate:"required"`
 }
 
 type AgentRemoveRequest struct {

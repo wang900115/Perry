@@ -21,7 +21,3 @@ type ToDoUpdateRequest struct {
 type ToDoDeleteRequest struct {
 	ID uint `json:"id" validate:"required"`
 }
-
-type ToDoGetStatusRequest struct {
-	ID uint `json:"id" validate:"required"`
-}

@@ -16,7 +16,7 @@ func NewAgentController(agent *usecase.Agent, response responser.Response) *Agen
 	return &Agent{agent: *agent, response: response}
 }
 
-// 新增代理
+// 新增代理(需用middleware帶參數)
 func (a *Agent) Add(c *gin.Context) {
 	var req validator.AgentAddRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -50,7 +50,7 @@ func (a *Agent) Remove(c *gin.Context) {
 	a.response.Success204(c)
 }
 
-// 移除該使用者底下的代理
+// 移除該使用者底下的代理(需用middleware帶參數)
 func (a *Agent) RemoveAll(c *gin.Context) {
 	userId := c.GetUint("user_id")
 	err := a.agent.RemoveAll(c, userId)
@@ -61,7 +61,7 @@ func (a *Agent) RemoveAll(c *gin.Context) {
 	a.response.Success204(c)
 }
 
-// 取得該使用者底下的代理
+// 取得該使用者底下的代理(需用middleware帶參數)
 func (a *Agent) Read(c *gin.Context) {
 	userId := c.GetUint("user_id")
 	agents, err := a.agent.Read(c, userId)

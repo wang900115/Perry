@@ -14,8 +14,8 @@ type ToDo interface {
 	Update(context.Context, validator.ToDoUpdateRequest) (*entity.ToDo, error)
 	// 刪除任務事項
 	Delete(context.Context, validator.ToDoDeleteRequest) error
-	// 取得任務事項
+	// 取得使用者底下的全部任務事項
 	Query(context.Context, uint) ([]*entity.ToDo, error)
-	// 取得任務狀態
-	GetStatus(context.Context, validator.ToDoGetStatusRequest) (string, error)
+	// 取得代理者下的任務事項
+	QueryAgent(context.Context, uint) ([]*entity.ToDo, error)
 }
