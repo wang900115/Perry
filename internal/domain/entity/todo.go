@@ -8,4 +8,5 @@ type ToDo struct {
 	Priority  string
 	StartTime time.Time
 	EndTime   time.Time
+	Status    string
 }

@@ -15,9 +15,10 @@ type ToDo struct {
 	User   User `gorm:"foreignKey:UserID"`
 
 	Name      string    `gorm:"column:name"`
-	Priority  string    `gorm:"priority"`
+	Priority  string    `gorm:"column:priority"`
 	StartTime time.Time `gorm:"column:start_time"`
 	EndTime   time.Time `gorm:"column:end_time"`
+	Status    string    `gorm:"column:status"`
 }
 
 // #endregion
@@ -38,6 +39,7 @@ func (t *ToDo) ToDomain() *entity.ToDo {
 		Priority:  t.Priority,
 		StartTime: t.StartTime,
 		EndTime:   t.EndTime,
+		Status:    t.Status,
 	}
 }
 
