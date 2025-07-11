@@ -11,4 +11,6 @@ type Agent interface {
 	UpdateStatus(context.Context, uint, string) error
 	// 取得狀態
 	GetStatus(context.Context, uint) (string, error)
+	// 刪除代理
+	Delete(context.Context, uint) error
 }

@@ -15,8 +15,13 @@ type ToDoUpdateRequest struct {
 	Priority  string    `json:"priority" validate:"omitempty"`
 	StartTime time.Time `json:"start_time" validate:"omitempty"`
 	EndTime   time.Time `json:"end_time" validate:"omitempty"`
+	Status    string    `json:"status" validate:"omitempty"`
 }
 
 type ToDoDeleteRequest struct {
+	ID uint `json:"id" validate:"required"`
+}
+
+type ToDoGetStatusRequest struct {
 	ID uint `json:"id" validate:"required"`
 }

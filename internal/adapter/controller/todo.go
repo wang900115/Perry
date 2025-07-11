@@ -16,7 +16,7 @@ func NewToDoController(todo *usecase.ToDo, response responser.Response) *ToDo {
 	return &ToDo{todo: *todo, response: response}
 }
 
-// 新增待辦事項(需要middleware帶參數(user_id))
+// 新增待辦任務(需要middleware帶參數(user_id))
 func (t *ToDo) Create(c *gin.Context) {
 	var req validator.ToDoCreateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -35,7 +35,7 @@ func (t *ToDo) Create(c *gin.Context) {
 	})
 }
 
-// 更新待辦事項(不需要middleware帶參數)
+// 更新待辦任務(不需要middleware帶參數)
 func (t *ToDo) Update(c *gin.Context) {
 	var req validator.ToDoUpdateRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -52,7 +52,7 @@ func (t *ToDo) Update(c *gin.Context) {
 	})
 }
 
-// 刪除待辦事項(不需要middleware帶參數)
+// 刪除待辦任務(不需要middleware帶參數)
 func (t *ToDo) Delete(c *gin.Context) {
 	var req validator.ToDoDeleteRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -67,7 +67,7 @@ func (t *ToDo) Delete(c *gin.Context) {
 	t.response.Success204(c)
 }
 
-// 取得使用者待辦事項(需要middleware帶參數(user_id))
+// 取得使用者待辦任務(需要middleware帶參數(user_id))
 func (t *ToDo) Query(c *gin.Context) {
 	// 為 ctx value
 	userID := c.GetUint("user_id")
