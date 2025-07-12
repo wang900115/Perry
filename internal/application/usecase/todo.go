@@ -42,11 +42,11 @@ func (t *ToDo) Delete(ctx context.Context, input validator.ToDoDeleteRequest) er
 
 // 更新待辦任務(先db更新狀態 再redis更新todo資訊)
 func (t *ToDo) Update(ctx context.Context, input validator.ToDoUpdateRequest) (*entity.ToDo, error) {
-	_, err := t.todoRepo.Update(ctx, input)
+	todo, err := t.todoRepo.Update(ctx, input)
 	if err != nil {
 		return nil, err
 	}
-	todo, err := t.todoCache.Update(ctx, input)
+	_, err = t.todoCache.Update(ctx, input)
 	if err != nil {
 		return nil, err
 	}

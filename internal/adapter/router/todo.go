@@ -18,7 +18,7 @@ func (t *ToDo) SetUp(router *gin.RouterGroup) {
 	{
 		todoGroup.POST("/dispatch", t.todo.Create)
 		todoGroup.DELETE("/delete", t.todo.Delete)
-		// todoGroup.PUT("/update", t.todo.Update)
+		todoGroup.PUT("/update", t.todo.Update)
 		todoGroup.GET("/query", t.todo.Query)
 	}
 }
