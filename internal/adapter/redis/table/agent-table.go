@@ -3,6 +3,7 @@ package redistable
 import (
 	rediskey "github.com/wang900115/Perry/internal/adapter/redis/key"
 	"github.com/wang900115/Perry/internal/domain/entity"
+	"github.com/wang900115/utils/convert"
 )
 
 type Agent struct {
@@ -27,10 +28,10 @@ func (a Agent) ToHash() map[string]interface{} {
 }
 
 // !todo redis's model <- redis
-func (a Agent) FromHash(data map[string]string) Agent {
-	return Agent{
+func (a Agent) FromHash(data map[string]string) *Agent {
+	return &Agent{
 		Name:        data[rediskey.REDIS_FIELD_AGENT_NAME],
-		Age:         data[rediskey.REDIS_FIELD_AGENT_AGE],
+		Age:         convert.FromStringToint(data[rediskey.REDIS_FIELD_AGENT_AGE]),
 		Role:        data[rediskey.REDIS_FIELD_AGENT_ROLE],
 		Language:    data[rediskey.REDIS_FIELD_AGENT_LANGUAGE],
 		Description: data[rediskey.REDIS_FIELD_AGENT_DESCRIPTION],

@@ -27,8 +27,8 @@ func (u UserSession) ToHash() map[string]interface{} {
 }
 
 // redis's model <- redis
-func (u UserSession) FromHash(data map[string]string) UserSession {
-	return UserSession{
+func (u UserSession) FromHash(data map[string]string) *UserSession {
+	return &UserSession{
 		Provider:  data[rediskey.REDIS_FIELD_USER_SESSION_PROVIDER],
 		IP:        data[rediskey.REDIS_FIELD_USER_SESSION_IP],
 		UserAgent: data[rediskey.REDIS_FIELD_USER_SESSION_UA],

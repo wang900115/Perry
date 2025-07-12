@@ -24,7 +24,7 @@ func (a *Agent) Add(ctx context.Context, user_id uint, input validator.AgentAddR
 	if err != nil {
 		return nil, err
 	}
-	err = a.agentCache.Initialize(ctx, agent.ID)
+	err = a.agentCache.Initialize(ctx, agent.ID, input)
 	if err != nil {
 		return nil, err
 	}
@@ -56,11 +56,7 @@ func (a *Agent) Read(ctx context.Context, user_id uint) ([]*entity.Agent, error)
 		return nil, err
 	}
 	if len(agentModels) > 0 {
-		agents := make([]*entity.Agent, 0, len(agentModels))
-		for _, agentModel := range agentModels {
-			agents = append(agents, agentModel.ToDomain())
-		}
-		return agents, nil
+		return agentModels, nil
 	}
 	return a.agentRepo.Read(ctx, user_id)
 }

@@ -8,7 +8,7 @@ import (
 )
 
 type ToDo interface {
-	// 新增任務事項
+	// 新增任務事項(指派給哪個代理人)
 	Create(context.Context, uint, validator.ToDoCreateRequest) (*entity.ToDo, error)
 	// 更新任務事項
 	Update(context.Context, validator.ToDoUpdateRequest) (*entity.ToDo, error)

@@ -14,6 +14,6 @@ type Agent interface {
 	Remove(context.Context, validator.AgentRemoveRequest) error
 	// 扣除該用戶全部的代理身分
 	RemoveAll(context.Context, uint) error
-	// 取得全部的代理身分
+	// 取得使用者下全部的代理身分
 	Read(context.Context, uint) ([]*entity.Agent, error)
 }

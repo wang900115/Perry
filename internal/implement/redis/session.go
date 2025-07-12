@@ -47,11 +47,11 @@ func (s *Session) Generate(ctx context.Context, userId uint, ip, userAgent strin
 	return sessionID, nil
 }
 
-func (s *Session) Get(ctx context.Context, sessionId int64) (redistable.UserSession, error) {
+func (s *Session) Get(ctx context.Context, sessionId int64) (*redistable.UserSession, error) {
 	key := rediskey.REDIS_TABLE_USER_SESSION + convert.FromInt64ToString(sessionId)
 	data, err := s.redis.HGetAll(ctx, key).Result()
 	if err != nil {
-		return redistable.UserSession{}, err
+		return nil, err
 	}
 	return redistable.UserSession{}.FromHash(data), nil
 }

@@ -16,9 +16,9 @@ func NewToDoRouter(todo *controller.ToDo) IRoute {
 func (t *ToDo) SetUp(router *gin.RouterGroup) {
 	todoGroup := router.Group("v1/todo")
 	{
-		todoGroup.POST("/create", t.todo.Create)
+		todoGroup.POST("/dispatch", t.todo.Create)
 		todoGroup.DELETE("/delete", t.todo.Delete)
-		todoGroup.PUT("/update", t.todo.Update)
+		// todoGroup.PUT("/update", t.todo.Update)
 		todoGroup.GET("/query", t.todo.Query)
 	}
 }

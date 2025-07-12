@@ -36,21 +36,21 @@ func (t *ToDo) Create(c *gin.Context) {
 }
 
 // 更新待辦任務(不需要middleware帶參數)
-func (t *ToDo) Update(c *gin.Context) {
-	var req validator.ToDoUpdateRequest
-	if err := c.ShouldBindJSON(&req); err != nil {
-		t.response.ClientFail400(c, err)
-		return
-	}
-	todo, err := t.todo.Update(c, req)
-	if err != nil {
-		t.response.ServerFail500(c, err)
-		return
-	}
-	t.response.Success200(c, map[string]interface{}{
-		"todo": todo,
-	})
-}
+// func (t *ToDo) Update(c *gin.Context) {
+// 	var req validator.ToDoUpdateRequest
+// 	if err := c.ShouldBindJSON(&req); err != nil {
+// 		t.response.ClientFail400(c, err)
+// 		return
+// 	}
+// 	todo, err := t.todo.Update(c, req)
+// 	if err != nil {
+// 		t.response.ServerFail500(c, err)
+// 		return
+// 	}
+// 	t.response.Success200(c, map[string]interface{}{
+// 		"todo": todo,
+// 	})
+// }
 
 // 刪除待辦任務(不需要middleware帶參數)
 func (t *ToDo) Delete(c *gin.Context) {

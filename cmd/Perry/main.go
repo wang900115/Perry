@@ -38,31 +38,38 @@ func main() {
 
 	userRepo := gormimplement.NewUserImplement(mysql)
 	todoRepo := gormimplement.NewToDoImplement(mysql)
+	agentRepo := gormimplement.NewAgentImplement(mysql)
 
-	sessionRepo := redisimplement.NewSessionImplement(redisPool)
+	todoRedis := redisimplement.NewToDoImplement(redisPool)
+	agentRedis := redisimplement.NewAgentImplement(redisPool)
+	sessionRedis := redisimplement.NewSessionImplement(redisPool)
+	tokenRedis := redisimplement.NewTokenImplement(redisPool, redisimplement.NewTokenOption(sett), os.Getenv("JWT_SECRET"))
 
-	tokenRepo := redisimplement.NewTokenImplement(redisPool, redisimplement.NewTokenOption(sett), os.Getenv("JWT_SECRET"))
-
-	todoUsecase := usecase.NewToDoUsecase(&todoRepo)
-	userUsecase := usecase.NewUserUsecase(&userRepo, &tokenRepo, &sessionRepo)
+	todoUsecase := usecase.NewToDoUsecase(&todoRepo, &todoRedis)
+	userUsecase := usecase.NewUserUsecase(&userRepo, &tokenRedis, &sessionRedis)
+	agentUsecase := usecase.NewAgentUsecase(&agentRepo, &agentRedis)
 	// endregion
 
 	// region WebServer
 	todoController := controller.NewToDoController(todoUsecase, response)
 	userController := controller.NewUserController(userUsecase, response)
 
+	agentController := controller.NewAgentController(agentUsecase, response)
 	corsMiddleware := cors.NewCORS(response, cors.NewCorsOption(sett))
-	jwtMiddleware := jwt.NewJWT(response, &tokenRepo)
+	jwtMiddleware := jwt.NewJWT(response, &tokenRedis)
 	secureMiddleware := secureheader.NewSecureHeader()
 	redisRateLimiter := ratelimiter.NewRateLimiter(response, *redisPool, ratelimiter.NewRateLimiterOption(sett))
 
 	todoRoute := router.NewToDoRouter(todoController)
 	userRoute := router.NewUserRouter(userController, jwtMiddleware)
+	agentRoute := router.NewAgentRouter(agentController)
 	// endregion
+
 	server := initializeServer.NewApp(
 		[]router.IRoute{
 			todoRoute,
 			userRoute,
+			agentRoute,
 		},
 		[]middleware.IMiddleware{
 			corsMiddleware,

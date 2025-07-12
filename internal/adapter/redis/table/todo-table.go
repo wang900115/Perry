@@ -5,6 +5,7 @@ import (
 
 	rediskey "github.com/wang900115/Perry/internal/adapter/redis/key"
 	"github.com/wang900115/Perry/internal/domain/entity"
+	"github.com/wang900115/utils/convert"
 )
 
 type ToDo struct {
@@ -31,8 +32,8 @@ func (t ToDo) FromHash(data map[string]string) ToDo {
 	return ToDo{
 		Name:      data[rediskey.REDIS_FIELD_TODO_NAME],
 		Priority:  data[rediskey.REDIS_FIELD_TODO_PRIORITY],
-		StartTime: data[rediskey.REDIS_FIELD_TODO_STARTTIME],
-		EndTime:   data[rediskey.REDIS_FIELD_TODO_ENDTIME],
+		StartTime: convert.FromStringToTimeTime(data[rediskey.REDIS_FIELD_TODO_STARTTIME]),
+		EndTime:   convert.FromStringToTimeTime(data[rediskey.REDIS_FIELD_TODO_ENDTIME]),
 		Status:    data[rediskey.REDIS_FIELD_TODO_STATUS],
 	}
 }

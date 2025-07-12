@@ -21,6 +21,7 @@ func NewToDoImplement(gorm *gorm.DB) gorminterface.ToDo {
 func (t *ToDo) Create(ctx context.Context, user_id uint, input validator.ToDoCreateRequest) (*entity.ToDo, error) {
 	createdToDo := gormmodel.ToDo{
 		UserID:    user_id,
+		AgentID:   input.ID,
 		Name:      input.Name,
 		Priority:  input.Priority,
 		StartTime: input.StartTime,
@@ -72,10 +73,14 @@ func (t *ToDo) Query(ctx context.Context, user_id uint) ([]*entity.ToDo, error) 
 	return res, nil
 }
 
-func (t *ToDo) GetStatus(ctx context.Context, input validator.ToDoGetStatusRequest) (string, error) {
-	var todoModel gormmodel.ToDo
-	if err := t.gorm.WithContext(ctx).First(&todoModel, input.ID).Error; err != nil {
-		return "", err
+func (t *ToDo) QueryAgent(ctx context.Context, agent_id uint) ([]*entity.ToDo, error) {
+	var todoModels []gormmodel.ToDo
+	if err := t.gorm.WithContext(ctx).Where("agent_id = ?", agent_id).Find(&todoModels).Error; err != nil {
+		return nil, err
 	}
-	return todoModel.Status, nil
+	res := make([]*entity.ToDo, 0, len(todoModels))
+	for _, todoModel := range todoModels {
+		res = append(res, todoModel.ToDomain())
+	}
+	return res, nil
 }

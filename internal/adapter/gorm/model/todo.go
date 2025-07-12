@@ -14,6 +14,9 @@ type ToDo struct {
 	UserID uint `gorm:"column:user_id"`
 	User   User `gorm:"foreignKey:UserID"`
 
+	AgentID uint  `gorm:"column:agent_id"`
+	Agent   Agent `gorm:"foreignKey:AgentID"`
+
 	Name      string    `gorm:"column:name"`
 	Priority  string    `gorm:"column:priority"`
 	StartTime time.Time `gorm:"column:start_time"`
@@ -25,7 +28,7 @@ type ToDo struct {
 
 // #region 表格名稱
 func (ToDo) TableName() string {
-	return "user_todo"
+	return "todo"
 }
 
 // #endregion

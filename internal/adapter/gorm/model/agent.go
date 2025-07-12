@@ -18,7 +18,7 @@ type Agent struct {
 	Language    string `gorm:"column:language"`
 	Description string `gorm:"column:description"`
 
-	Status string `gorm:"status"`
+	Status string `gorm:"column:status"`
 }
 
 // #endregion
