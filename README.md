@@ -87,3 +87,5 @@ Go 學習筆記與主題式範例集合。每個資料夾通常代表一個技�
 | embed-demo | TODO: 補上此資料夾的專案主題說明。 |
 
 | nosplit-demo | TODO: 補上此資料夾的專案主題說明。 |
+
+| linkname-demo | TODO: 補上此資料夾的專案主題說明。 |
