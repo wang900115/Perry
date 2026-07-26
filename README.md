@@ -8,9 +8,12 @@ Go 學習筆記與主題式範例集合。每個資料夾通常代表一個技�
 | --- | --- |
 | alogrithm | 演算法與資料結構練習，底下再分成 design、search、sort、structure 等子主題。 |
 | async | 非同步處理範例，包含 producer、consumer、tasks 等背景任務處理概念。 |
+| assembly | 組合語言與 CPU 暫存器、指令、記憶體模型的 Go 實驗範例。 |
 | background_faktory | 使用 Faktory 建立背景工作佇列的範例。 |
 | background_gocraft | 使用 gocraft/work 之類的工作佇列框架處理背景任務。 |
+| barrier | goroutine 同步屏障（barrier）模式示範。 |
 | benchmark | Go 效能測試、CPU profiling、memory profiling 的示範。 |
+| bce | Bound Check Elimination（邊界檢查消除）相關範例與實驗。 |
 | boomfilter | Bloom Filter 實作範例，用來示範機率型集合查詢。資料夾名稱應是 Bloom Filter 的變體拼法。 |
 | breakcircut | Circuit Breaker 熔斷機制範例。資料夾名稱是 break circuit / circuit breaker 的變體拼法。 |
 | build_tag | Go build tags 的使用方式，例如不同環境或不同作業系統的編譯條件。 |
@@ -22,8 +25,12 @@ Go 學習筆記與主題式範例集合。每個資料夾通常代表一個技�
 | convert | 型別轉換、資料格式轉換相關範例。 |
 | decorator | Decorator 設計模式示範。 |
 | dependency | 依賴注入或模組依賴設計的範例。 |
+| dump | 產生程式 dump 檔與除錯分析的示範。 |
+| embed-demo | 使用 Go embed 功能內嵌資源檔案的範例。 |
 | errgroup | 使用 errgroup 管理 goroutine 與錯誤彙整。 |
+| escape | Escape analysis（逃逸分析）與配置行為觀察範例。 |
 | error, handling | Go 錯誤處理模式與基本實作示範。 |
+| falseshare | False sharing（偽共享）效能問題與對照測試範例。 |
 | function, slice, array | Go 函式、slice、array 的語法與行為練習。 |
 | generator | 生成器模式或用 goroutine 模擬 generator 的範例。 |
 | gocron | 使用 gocron 做排程工作。 |
@@ -38,11 +45,13 @@ Go 學習筆記與主題式範例集合。每個資料夾通常代表一個技�
 | iter | iterator 模式或迭代器風格程式設計練習。 |
 | jwt | JWT 驗證、授權與簡單 Web 範例。 |
 | kafka | Kafka producer / worker 訊息處理範例。 |
+| linkname-demo | 使用 `//go:linkname` 的實驗性示範。 |
 | logger | 記錄日誌與輸出到檔案的範例。 |
 | lsm | LSM Tree 儲存引擎概念實作，包含 wal、mem、ssl、lsm 等子模組。 |
 | memcache | Memcache 的使用範例，可能包含簡單 API 或資料存取示範。 |
 | module | Go module 使用方式與模組拆分練習。 |
 | multipartload | multipart 檔案上傳的 client/server 範例。 |
+| nosplit-demo | `//go:nosplit` 行為觀察與相關實驗範例。 |
 | orDone&T | Go pipeline 常見模式示範，包含 orDone、tee 等 channel 組合技巧。 |
 | p2p | P2P 網路相關範例，可能包含 launchpad tutorial 類型練習。 |
 | paseto | PASETO token 驗證與安全性相關範例。 |
@@ -73,21 +82,3 @@ Go 學習筆記與主題式範例集合。每個資料夾通常代表一個技�
 - `prepare-commit-msg` 會在你沒有手寫 commit message 時，自動依 staged 的頂層資料夾產生預設訊息。
 - `pre-commit` 會檢查 staged 檔案所屬的新頂層資料夾；如果 `info.md` 還沒有該條目，就自動補上一列 `TODO` 說明並重新 stage。
 - 這表示你新增新的主題資料夾後，commit 時會自動把該主題補進這份文件，但主題說明文字仍建議後續手動補完整。
-
-| falseshare | TODO: 補上此資料夾的專案主題說明。 |
-
-| barrier | TODO: 補上此資料夾的專案主題說明。 |
-
-| escape | TODO: 補上此資料夾的專案主題說明。 |
-
-| bce | TODO: 補上此資料夾的專案主題說明。 |
-
-| assembly | TODO: 補上此資料夾的專案主題說明。 |
-
-| embed-demo | TODO: 補上此資料夾的專案主題說明。 |
-
-| nosplit-demo | TODO: 補上此資料夾的專案主題說明。 |
-
-| linkname-demo | TODO: 補上此資料夾的專案主題說明。 |
-
-| dump | TODO: 補上此資料夾的專案主題說明。 |
